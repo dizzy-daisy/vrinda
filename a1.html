@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://apis.mapmyindia.com/advancedmaps/v1/b1e981b5656b5758b390c49b00690d93/map_load?v=1.5"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h2>map is here</h2>
+    <div id="map"></div>
+</body>
+<script>
+    var mark,map;
+    function any(){
+    map = new MapmyIndia.Map("map", {
+    center: [28.6139, 77.2090],  // Latitude, Longitude (Delhi)
+    zoom: 15
+});
+    mark=new L.marker([28.6139,77.2090]).addTo(map);
+    uplo();
+    setInterval(uplo,5000);
+    }
+    function uplo() {
+    fetch('backend/track.php')
+    .then(response => response.json())
+    .then(data => {
+        const { latitude, longitude } = data;  // Correct variables
+
+        if (latitude && longitude) {
+            mark.setLatLng([latitude, longitude]);  // Correct usage
+            map.setView([latitude, longitude], 15);
+        }
+    })
+    .catch(error => {
+    console.error('Error occurred:', error);
+    alert('Failed to fetch location data. Please check the server.');
+});
+}
+
+    window.onload=any;
+</script>
+</html>
